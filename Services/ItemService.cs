@@ -1,12 +1,14 @@
 ﻿using System;
-using Siemens.Internship2026.Gradebook.Models;
-using Siemens.Internship2026.Gradebook.Interfaces;
+using Siemens.Internship2026.GradeBook.Models;
+using Siemens.Internship2026.GradeBook.Interfaces;
+
+namespace Siemens.Internship2026.GradeBook.Services;
 
 public class ItemService : IItemService
 {
     private readonly IItemReader _reader;
 
-    public ItemService (IItemService reader)
+    public ItemService (IItemReader reader)
     {
         _reader = reader;
     }
