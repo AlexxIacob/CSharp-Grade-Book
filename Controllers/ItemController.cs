@@ -47,5 +47,15 @@ public class ItemController : ControllerBase
 
         return Ok(item);
     }
+
+    [HttpGet("passing")]
+    public async Task<IActionResult> GetPassingGrades([FromQuery] int count = 10)
+    {
+        if (count <= 0)
+            return BadRequest("Count must be a positive integer.");
+
+        var items = await _service.GetTopPassingGradesAsync(count);
+        return Ok(items);
+    }
 }
     
