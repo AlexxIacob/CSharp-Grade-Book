@@ -7,56 +7,45 @@ namespace Siemens.Internship2026.GradeBook.Controllers;
 [Route("api/[controller]")]
 public class ItemController : ControllerBase
 {
-    private readonly IItemReader _reader;
+    private readonly IItemService _service;
+    private readonly ILogger<ItemController> _logger;
 
-    public ItemController(IItemReader reader)
+    public ItemController(IItemService service, ILogger<ItemController> logger)
     {
-        _reader = reader;
+        _service = service;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        Console.WriteLine($"[LOG] {DateTime.UtcNow}: GET api/item called");
+        _logger.LogInformation("GET api/item called at {time}", DateTime.UtcNow);
 
-        var items = await _reader.GetAllAsync();
+        var items = await _service.GetAllAsync();
         var itemList = items.ToList();
 
-        var totalCount = itemList.Count;
-        var averageValue = itemList.Any() ? itemList.Average(i => i.Value) : 0;
-
-        Console.WriteLine($"[LOG] Returning {totalCount} items, average value: {averageValue}");
-
-        return Ok(new
-        {
-            Data = itemList,
-            Statistics = new
-            {
-                TotalCount = totalCount,
-                AverageValue = averageValue,
-                RetrievedAt = DateTime.UtcNow
-            }
-        });
+        _logger.LogInformation("Return {count} items", itemList.Count);
+        
+        return Ok(itemList);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
-        Console.WriteLine($"[LOG] {DateTime.UtcNow}: GET api/item/{id} called");
+        _logger.LogInformation("GET api/item/{id} called", id);
 
         if (id <= 0)
         {
-            Console.WriteLine($"[LOG] Invalid id: {id}");
             return BadRequest("Id must be a positive integer.");
         }
 
-        var item = await _reader.GetByIdAsync(id);
+        var item = await _service.GetByIdAsync(id);
         if (item == null)
         {
-            Console.WriteLine($"[LOG] Item {id} not found");
             return NotFound($"Item with Id {id} was not found.");
         }
 
         return Ok(item);
     }
 }
+    
