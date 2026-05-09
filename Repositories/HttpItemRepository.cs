@@ -32,6 +32,6 @@ public class HttpItemRepository : IItemReader
     {
         var response = await _httpClient.GetFromJsonAsync<ItemsResponse>(Endpoint);
         return response?.Items ?? Enumerable.Empty<Item>();
-    
+    }
 
 }
