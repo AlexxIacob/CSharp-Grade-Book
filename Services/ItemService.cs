@@ -22,4 +22,17 @@ public class ItemService : IItemService
     {
         return _reader.GetByIdAsync(id);
     }
+
+    public async Task<IEnumerable<Item>> GetTopPassingGradesAsync(int count)
+    {
+        if (count <= 0)
+            throw new ArgumentOutOfRangeException(nameof(count), "Count must be a positive integer.");
+
+        var items = await _reader.GetAllAsync();
+
+        return items
+            .Where(i => i.Value >= 5)
+            .Take(count);
+    }
+
 }

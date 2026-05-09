@@ -7,5 +7,6 @@ public interface IItemService
 {
     Task<IEnumerable<Item>> GetAllAsync();
     Task<Item?> GetByIdAsync(int id);
+    Task<IEnumerable<Item>> GetTopPassingGradesAsync(int count);
 }
 
